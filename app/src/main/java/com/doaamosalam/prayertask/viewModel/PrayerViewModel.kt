@@ -1,13 +1,17 @@
 package com.doaamosalam.prayertask.viewModel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doaamosalam.domain.useCase.GetNextPrayerUseCase
 import com.doaamosalam.domain.useCase.GetPrayerTimesUseCase
 import com.doaamosalam.domain.util.Resource
+import com.doaamosalam.domain.util.convertPrayerTimeToMillis
+import com.doaamosalam.prayertask.alarm.PrayerNotificationScheduler
 import com.doaamosalam.prayertask.util.PrayerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
     private val getPrayerTimesUseCase: GetPrayerTimesUseCase,
-    private val getNextPrayerUseCase: GetNextPrayerUseCase
+    private val getNextPrayerUseCase: GetNextPrayerUseCase,
+    private val notificationScheduler: PrayerNotificationScheduler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PrayerUiState())
@@ -35,6 +40,11 @@ class PrayerViewModel @Inject constructor(
                     val prayerTimes = result.data!!
 
                     val nextPrayer = getNextPrayerUseCase(prayerTimes)
+                    notificationScheduler.scheduleNextPrayerNotification(nextPrayer)
+//
+//                    val millis = convertPrayerTimeToMillis(nextPrayer.time)
+//
+//                    scheduler.schedule(millis, nextPrayer.name)
 
                     _uiState.update {
                         it.copy(
@@ -44,6 +54,7 @@ class PrayerViewModel @Inject constructor(
                             errorMessage = null
                         )
                     }
+
                 }
 
                 is Resource.Error -> {

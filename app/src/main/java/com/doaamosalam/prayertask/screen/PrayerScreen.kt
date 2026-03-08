@@ -2,6 +2,7 @@ package com.doaamosalam.prayertask.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,13 +24,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,9 +41,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.doaamosalam.domain.model.nextprayer.NextPrayer
 import com.doaamosalam.domain.model.prayerTime.PrayerTimes
-import com.doaamosalam.prayertask.R
 import com.doaamosalam.prayertask.compose.PrayerTimesSection
 import com.doaamosalam.prayertask.screen.CountdownRow
+import com.doaamosalam.prayertask.screen.PrayerItem
 import com.doaamosalam.prayertask.ui.theme.BadgeBg
 import com.doaamosalam.prayertask.ui.theme.BgDark
 import com.doaamosalam.prayertask.ui.theme.BgNavy
@@ -56,25 +58,22 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
 // ── Entry Point ───────────────────────────────────────────────────────────────
 @Composable
 fun PrayerScreen(
     viewModel: PrayerViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var isArabic by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-
         viewModel.fetchPrayerTimes("Cairo", "Egypt")
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(listOf(BgDark, BgNavy, BgDark))
-            )
+            .background(Brush.verticalGradient(listOf(BgDark, BgNavy, BgDark)))
     ) {
         when {
             uiState.isLoading -> LoadingContent()
@@ -89,19 +88,22 @@ fun PrayerScreen(
             uiState.prayerTimes != null -> {
                 MainContent(
                     prayerTimes = uiState.prayerTimes!!,
-                    nextPrayer = uiState.nextPrayer
+                    nextPrayer = uiState.nextPrayer,
+                    isArabic = isArabic,
+                    onLanguageToggle = { isArabic = !isArabic }
                 )
             }
         }
     }
 }
 
-
 // ── Main Content ──────────────────────────────────────────────────────────────
 @Composable
 private fun MainContent(
     prayerTimes: PrayerTimes,
-    nextPrayer: NextPrayer?
+    nextPrayer: NextPrayer?,
+    isArabic: Boolean,
+    onLanguageToggle: () -> Unit
 ) {
     val prayers = remember(prayerTimes) { buildPrayerList(prayerTimes) }
 
@@ -112,23 +114,22 @@ private fun MainContent(
             .padding(horizontal = 20.dp)
     ) {
         Spacer(Modifier.height(52.dp))
-        Header()
+        Header(isArabic = isArabic, onLanguageToggle = onLanguageToggle)
         Spacer(Modifier.height(20.dp))
-        nextPrayer?.let { NextPrayerCard(nextPrayer = it) }
+        nextPrayer?.let { NextPrayerCard(nextPrayer = it, isArabic = isArabic) }
         Spacer(Modifier.height(28.dp))
         PrayerTimesSection(
             prayers = prayers,
-            nextPrayerName = nextPrayer?.name
+            nextPrayerName = nextPrayer?.name,
+            isArabic = isArabic
         )
         Spacer(Modifier.height(40.dp))
     }
 }
 
-
 // ── Header ────────────────────────────────────────────────────────────────────
-
 @Composable
-private fun Header() {
+private fun Header(isArabic: Boolean, onLanguageToggle: () -> Unit) {
     val today = remember {
         SimpleDateFormat("EEE, MMM d", Locale.ENGLISH).format(Date())
     }
@@ -138,9 +139,49 @@ private fun Header() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = today, color = TextGray, fontSize = 13.sp)
+        // Language Toggle - left
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(CardBg)
+                .border(1.dp, GoldPrimary.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
+                .padding(2.dp)
+        ) {
+            Row {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(if (!isArabic) GoldPrimary else Color.Transparent)
+                        .clickable { if (isArabic) onLanguageToggle() }
+                        .padding(horizontal = 14.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "EN",
+                        color = if (!isArabic) BgDark else TextGray,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(if (isArabic) GoldPrimary else Color.Transparent)
+                        .clickable { if (!isArabic) onLanguageToggle() }
+                        .padding(horizontal = 14.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "AR",
+                        color = if (isArabic) BgDark else TextGray,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        // Title - right
         Text(
-            text = stringResource(R.string.prayertime),
+            text = if (isArabic) "مواقيت الصلاة" else "Prayer Times",
             color = GoldLight,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
@@ -148,8 +189,6 @@ private fun Header() {
     }
 
     Spacer(Modifier.height(10.dp))
-
-    // Crescent moon
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Text(text = "🌙", fontSize = 52.sp)
     }
@@ -157,28 +196,23 @@ private fun Header() {
 
 // ── Next Prayer Card ──────────────────────────────────────────────────────────
 @Composable
-private fun NextPrayerCard(nextPrayer: NextPrayer) {
-
+private fun NextPrayerCard(nextPrayer: NextPrayer, isArabic: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFF221E38), Color(0xFF1A1730))
-                )
+                Brush.verticalGradient(listOf(Color(0xFF221E38), Color(0xFF1A1730)))
             )
             .border(1.dp, GoldPrimary.copy(alpha = 0.25f), RoundedCornerShape(18.dp))
             .padding(vertical = 24.dp, horizontal = 20.dp)
     ) {
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-
             Text(
-                text = stringResource(R.string.next_prayer),
+                text = if (isArabic) "الصلاة القادمة" else "Next Prayer",
                 color = GoldLight.copy(alpha = 0.7f),
                 fontSize = 12.sp,
                 letterSpacing = 1.sp
@@ -187,7 +221,7 @@ private fun NextPrayerCard(nextPrayer: NextPrayer) {
             Spacer(Modifier.height(6.dp))
 
             Text(
-                text = nextPrayer.nameArabic,
+                text = if (isArabic) nextPrayer.nameArabic else nextPrayer.name,
                 color = GoldLight,
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Bold
@@ -201,31 +235,18 @@ private fun NextPrayerCard(nextPrayer: NextPrayer) {
 
             Spacer(Modifier.height(20.dp))
 
-            CountdownRow(
-                remainingSeconds = nextPrayer.remainingSeconds
-            )
+            CountdownRow(remainingSeconds = nextPrayer.remainingSeconds)
         }
     }
 }
 
 // ── Prayer Row ────────────────────────────────────────────────────────────────
 @Composable
-fun PrayerRow(prayer: PrayerItem, isNext: Boolean) {
+fun PrayerRow(prayer: PrayerItem, isNext: Boolean, isArabic: Boolean) {
     val bg = if (isNext) Color(0xFF22203A) else CardBg
     val border = if (isNext) BorderGold else Color.Transparent
     val timeColor = if (isNext) GoldLight else TextWhite
 
-    PrayerRow(bg, border, isNext, prayer, timeColor)
-}
-
-@Composable
-private fun PrayerRow(
-    bg: Color,
-    border: Color,
-    isNext: Boolean,
-    prayer: PrayerItem,
-    timeColor: Color
-) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -239,7 +260,7 @@ private fun PrayerRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // ── Left: time ────────────────────────────────────────────────────
+            // Left: time
             Column {
                 if (isNext) {
                     Box(
@@ -249,7 +270,7 @@ private fun PrayerRow(
                             .padding(horizontal = 7.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.next),
+                            text = if (isArabic) "التالية" else "Next",
                             color = BgDark,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -273,18 +294,18 @@ private fun PrayerRow(
                 )
             }
 
-            // ── Right: icon + name ────────────────────────────────────────────
+            // Right: icon + name
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = prayer.nameAr,
+                        text = if (isArabic) prayer.nameAr else prayer.nameEn,
                         color = timeColor,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.End
                     )
                     Text(
-                        text = prayer.nameEn,
+                        text = if (isArabic) prayer.nameEn else prayer.nameAr,
                         color = TextGray,
                         fontSize = 11.sp,
                         textAlign = TextAlign.End
@@ -297,8 +318,7 @@ private fun PrayerRow(
                         .size(42.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(
-                            if (isNext) GoldPrimary.copy(alpha = 0.15f)
-                            else BgDark
+                            if (isNext) GoldPrimary.copy(alpha = 0.15f) else BgDark
                         )
                 ) {
                     Text(text = prayer.icon, fontSize = 22.sp)
@@ -315,7 +335,7 @@ private fun LoadingContent() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator(color = GoldLight, strokeWidth = 3.dp)
             Spacer(Modifier.height(14.dp))
-            Text(stringResource(R.string.load), color = TextGray, fontSize = 14.sp)
+            Text("جاري التحميل...", color = TextGray, fontSize = 14.sp)
         }
     }
 }
@@ -333,7 +353,7 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
             Text("⚠️", fontSize = 48.sp)
             Spacer(Modifier.height(16.dp))
             Text(
-                stringResource(R.string.occoured), color = TextWhite, fontSize = 16.sp,
+                "حدث خطأ ما", color = TextWhite, fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
@@ -344,19 +364,13 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary)
             ) {
-                Text(stringResource(R.string.try_again), color = BgDark, fontWeight = FontWeight.Bold)
+                Text("إعادة المحاولة", color = BgDark, fontWeight = FontWeight.Bold)
             }
         }
     }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-data class PrayerItem(
-    val nameEn: String,
-    val nameAr: String,
-    val time: String,
-    val icon: String
-)
 
 private fun buildPrayerList(pt: PrayerTimes) = listOf(
     PrayerItem("Fajr", "الفجر", pt.fajr, "🌅"),
@@ -366,11 +380,10 @@ private fun buildPrayerList(pt: PrayerTimes) = listOf(
     PrayerItem("Isha", "العشاء", pt.isha, "🌙")
 )
 
-
 private fun formatTo12Hour(time24: String): String {
     return runCatching {
         val parts = time24.take(5).split(":")
-        val h = parts[0].toInt();
+        val h = parts[0].toInt()
         val m = parts[1].toInt()
         val amPm = if (h < 12) "AM" else "PM"
         val h12 = when {
@@ -379,6 +392,8 @@ private fun formatTo12Hour(time24: String): String {
         String.format("%02d:%02d %s", h12, m, amPm)
     }.getOrDefault(time24)
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -399,6 +414,8 @@ fun PrayerScreenPreview() {
             nameArabic = "الظهر",
             time = "12:05",
             remainingSeconds = 3600
-        )
+        ),
+        isArabic = true,
+        onLanguageToggle = {}
     )
 }

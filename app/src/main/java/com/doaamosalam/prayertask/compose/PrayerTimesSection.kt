@@ -16,10 +16,11 @@ import com.doaamosalam.prayertask.ui.theme.TextGray
 @Composable
 fun PrayerTimesSection(
     prayers: List<PrayerItem>,
-    nextPrayerName: String?
+    nextPrayerName: String?,
+    isArabic: Boolean
 ) {
     Text(
-        text = "PRAYER TIMES",
+        text = if (isArabic) "مواقيت الصلاة" else "PRAYER TIMES",
         color = TextGray,
         fontSize = 11.sp,
         fontWeight = FontWeight.Bold,
@@ -31,7 +32,8 @@ fun PrayerTimesSection(
         prayers.forEach { prayer ->
             PrayerRow(
                 prayer = prayer,
-                isNext = prayer.nameEn == nextPrayerName
+                isNext = prayer.nameEn == nextPrayerName,
+                isArabic = isArabic
             )
         }
     }
