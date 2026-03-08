@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Prayer Task</string>
+    <string name="prayertime">مواقيت الصلاة</string>
+    <string name="next_prayer">الصلاة القادمة</string>
+    <string name="next">▶ التالية</string>
+    <string name="load">جارٍ التحميل...</string>
+    <string name="try_again">إعادة المحاولة</string>
+    <string name="occoured">تعذّر تحميل مواقيت الصلاة</string>
 </resources>

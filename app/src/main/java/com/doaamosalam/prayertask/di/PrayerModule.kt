@@ -1,5 +1,6 @@
 package com.doaamosalam.prayertask.di
 
+import com.doaamosalam.data.local.PrayerTimeData.PrayerTimesDao
 import com.doaamosalam.data.remote.APIPrayerService
 import com.doaamosalam.data.repository.PrayerTimeRepoImpl
 import com.doaamosalam.domain.repo.PrayerTimeRepo
@@ -14,7 +15,12 @@ import javax.inject.Singleton
 object PrayerModule {
     @Provides
     @Singleton
-    fun providePrayerTimeRepo(apiService: APIPrayerService): PrayerTimeRepo {
-        return PrayerTimeRepoImpl(apiService)
+    fun providePrayerTimeRepo(
+        apiService: APIPrayerService,
+        dao: PrayerTimesDao
+    ): PrayerTimeRepo {
+        return PrayerTimeRepoImpl(
+            apiService,
+            dao)
     }
 }

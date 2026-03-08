@@ -1,5 +1,6 @@
 package com.doaamosalam.prayertask.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doaamosalam.domain.useCase.GetNextPrayerUseCase
@@ -46,9 +47,14 @@ class PrayerViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+
+                    Log.e("PrayerVM", "API failed, trying cache...")
+                    val cached = getPrayerTimesUseCase(city, country) // Retry from DB
+                    Log.e("PrayerVM", "Cached data: $cached")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            prayerTimes = cached.data,
                             errorMessage = result.exception?.localizedMessage ?: "Unknown error"
                         )
                     }

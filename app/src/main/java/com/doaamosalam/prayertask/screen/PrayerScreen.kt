@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.doaamosalam.domain.model.nextprayer.NextPrayer
 import com.doaamosalam.domain.model.prayerTime.PrayerTimes
+import com.doaamosalam.prayertask.R
 import com.doaamosalam.prayertask.compose.PrayerTimesSection
 import com.doaamosalam.prayertask.screen.CountdownRow
 import com.doaamosalam.prayertask.ui.theme.BadgeBg
@@ -63,6 +65,7 @@ fun PrayerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
+
         viewModel.fetchPrayerTimes("Cairo", "Egypt")
     }
 
@@ -137,7 +140,7 @@ private fun Header() {
     ) {
         Text(text = today, color = TextGray, fontSize = 13.sp)
         Text(
-            text = "مواقيت الصلاة",
+            text = stringResource(R.string.prayertime),
             color = GoldLight,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
@@ -175,7 +178,7 @@ private fun NextPrayerCard(nextPrayer: NextPrayer) {
         ) {
 
             Text(
-                text = "الصلاة القادمة",
+                text = stringResource(R.string.next_prayer),
                 color = GoldLight.copy(alpha = 0.7f),
                 fontSize = 12.sp,
                 letterSpacing = 1.sp
@@ -246,7 +249,7 @@ private fun PrayerRow(
                             .padding(horizontal = 7.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = "▶ التالية",
+                            text = stringResource(R.string.next),
                             color = BgDark,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold
@@ -312,7 +315,7 @@ private fun LoadingContent() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator(color = GoldLight, strokeWidth = 3.dp)
             Spacer(Modifier.height(14.dp))
-            Text("جارٍ التحميل...", color = TextGray, fontSize = 14.sp)
+            Text(stringResource(R.string.load), color = TextGray, fontSize = 14.sp)
         }
     }
 }
@@ -330,7 +333,7 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
             Text("⚠️", fontSize = 48.sp)
             Spacer(Modifier.height(16.dp))
             Text(
-                "تعذّر تحميل مواقيت الصلاة", color = TextWhite, fontSize = 16.sp,
+                stringResource(R.string.occoured), color = TextWhite, fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
@@ -341,7 +344,7 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary)
             ) {
-                Text("إعادة المحاولة", color = BgDark, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.try_again), color = BgDark, fontWeight = FontWeight.Bold)
             }
         }
     }
