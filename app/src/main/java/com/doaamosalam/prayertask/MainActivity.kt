@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.doaamosalam.prayertask.ui.screen.PrayerScreen
 import com.doaamosalam.prayertask.ui.theme.PrayerTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,30 +22,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PrayerTaskTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+
+                    PrayerScreen()
+
             }
         }
     }
 
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     PrayerTaskTheme {
-        Greeting("Android")
+        PrayerScreen(
+
+        )
     }
 }

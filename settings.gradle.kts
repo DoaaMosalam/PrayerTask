@@ -24,4 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Prayer Task"
 include(":app")
- 
+include(":data")
+
+include(":domain")
