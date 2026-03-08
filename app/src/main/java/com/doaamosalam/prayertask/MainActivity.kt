@@ -1,17 +1,11 @@
 package com.doaamosalam.prayertask
 
 import android.Manifest
-import android.Manifest.permission
-import android.Manifest.permission.POST_NOTIFICATIONS
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat.requestPermissions
 import com.doaamosalam.prayertask.ui.screen.PrayerScreen
 import com.doaamosalam.prayertask.ui.theme.PrayerTaskTheme
 import com.doaamosalam.prayertask.util.NotificationHelper
@@ -26,6 +20,7 @@ class MainActivity : ComponentActivity() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 // Permission granted
+
             } else {
                 // Permission denied
             }

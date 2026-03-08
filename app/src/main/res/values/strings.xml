@@ -6,4 +6,8 @@
     <string name="load">جارٍ التحميل...</string>
     <string name="try_again">إعادة المحاولة</string>
     <string name="occoured">تعذّر تحميل مواقيت الصلاة</string>
+    <string name="prayer_time">مواقيت الصلاة</string>
+    <string name="prayer_times_en">PRAYER TIMES</string>
+    <string name="prayer_channel">prayer_channel</string>
+    <string name="prayer_notifications">Prayer Notifications</string>
 </resources>

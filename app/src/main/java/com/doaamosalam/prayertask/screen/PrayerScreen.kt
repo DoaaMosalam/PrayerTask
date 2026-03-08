@@ -394,7 +394,6 @@ private fun formatTo12Hour(time24: String): String {
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun PrayerScreenPreview() {

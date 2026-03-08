@@ -24,7 +24,8 @@ object PrayerModule {
     ): PrayerTimeRepo {
         return PrayerTimeRepoImpl(
             apiService,
-            dao)
+            dao
+        )
     }
 
     @Provides

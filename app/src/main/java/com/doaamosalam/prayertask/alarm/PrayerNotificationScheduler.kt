@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.doaamosalam.domain.model.nextprayer.NextPrayer
-import kotlin.jvm.java
 
 
 class PrayerNotificationScheduler(private val context: Context) {
@@ -26,9 +25,10 @@ class PrayerNotificationScheduler(private val context: Context) {
         )
 
         // Calculate trigger time
-//        val triggerTime = System.currentTimeMillis() + (nextPrayer.remainingSeconds * 1000)
+        val triggerTime = System.currentTimeMillis() + (nextPrayer.remainingSeconds * 1000)
+
 // test trigger time after 10 seconds for demonstration
-        val triggerTime = System.currentTimeMillis() + 10_000
+//        val triggerTime = System.currentTimeMillis() + 10_000
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(

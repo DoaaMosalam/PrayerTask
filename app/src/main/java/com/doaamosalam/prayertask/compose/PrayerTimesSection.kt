@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.doaamosalam.prayertask.ui.screen.PrayerItem
+import com.doaamosalam.prayertask.R
+import com.doaamosalam.prayertask.screen.PrayerItem
 import com.doaamosalam.prayertask.ui.screen.PrayerRow
 import com.doaamosalam.prayertask.ui.theme.TextGray
 
@@ -20,7 +22,7 @@ fun PrayerTimesSection(
     isArabic: Boolean
 ) {
     Text(
-        text = if (isArabic) "مواقيت الصلاة" else "PRAYER TIMES",
+        text = if (isArabic) stringResource(R.string.prayer_time) else stringResource(R.string.prayer_times_en),
         color = TextGray,
         fontSize = 11.sp,
         fontWeight = FontWeight.Bold,

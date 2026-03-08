@@ -1,19 +1,15 @@
 package com.doaamosalam.prayertask.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.doaamosalam.data.local.PrayerDatabase
 import com.doaamosalam.data.local.PrayerTimeData.PrayerTimesDao
-
 import com.doaamosalam.prayertask.util.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import kotlin.jvm.java
 
 // di/DatabaseModule.kt
 @Module
@@ -23,7 +19,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providePrayerDatabase(
-         context: Context
+        context: Context
     ): PrayerDatabase = Room.databaseBuilder(
         context,
         PrayerDatabase::class.java,

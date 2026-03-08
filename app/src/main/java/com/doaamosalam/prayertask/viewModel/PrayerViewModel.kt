@@ -1,17 +1,14 @@
 package com.doaamosalam.prayertask.viewModel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.doaamosalam.domain.useCase.GetNextPrayerUseCase
 import com.doaamosalam.domain.useCase.GetPrayerTimesUseCase
 import com.doaamosalam.domain.util.Resource
-import com.doaamosalam.domain.util.convertPrayerTimeToMillis
 import com.doaamosalam.prayertask.alarm.PrayerNotificationScheduler
 import com.doaamosalam.prayertask.util.PrayerUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,10 +38,6 @@ class PrayerViewModel @Inject constructor(
 
                     val nextPrayer = getNextPrayerUseCase(prayerTimes)
                     notificationScheduler.scheduleNextPrayerNotification(nextPrayer)
-//
-//                    val millis = convertPrayerTimeToMillis(nextPrayer.time)
-//
-//                    scheduler.schedule(millis, nextPrayer.name)
 
                     _uiState.update {
                         it.copy(
@@ -58,7 +51,6 @@ class PrayerViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-
                     Log.e("PrayerVM", "API failed, trying cache...")
                     val cached = getPrayerTimesUseCase(city, country) // Retry from DB
                     Log.e("PrayerVM", "Cached data: $cached")
