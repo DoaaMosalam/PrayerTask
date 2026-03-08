@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.doaamosalam.prayertask.ui.theme.BadgeBg
 import com.doaamosalam.prayertask.ui.theme.BorderGold
 import com.doaamosalam.prayertask.ui.theme.DecorationBlue
 import com.doaamosalam.prayertask.ui.theme.DecorationGreen
@@ -36,13 +37,11 @@ import com.doaamosalam.prayertask.ui.theme.DecorationPink
 import com.doaamosalam.prayertask.ui.theme.GoldLight
 import com.doaamosalam.prayertask.ui.theme.GoldPrimary
 import com.doaamosalam.prayertask.ui.theme.Natural_White
-import com.doaamosalam.prayertask.ui.theme.StarGold
-import com.doaamosalam.prayertask.ui.theme.StarWhite
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun AnimatedMoon() {
+ fun AnimatedMoon() {
     val infiniteTransition = rememberInfiniteTransition(label = "deco")
 
     val moonRotation by infiniteTransition.animateFloat(
@@ -53,7 +52,7 @@ fun AnimatedMoon() {
         ), label = "moon"
     )
 
-    // light glows with different timings to create a dynamic twinkling effect
+    // أنوار تبرق
     val glow1 by infiniteTransition.animateFloat(
         initialValue = 0.2f, targetValue = 1f,
         animationSpec = infiniteRepeatable(
@@ -90,7 +89,7 @@ fun AnimatedMoon() {
         contentAlignment = Alignment.Center
     ) {
 
-        // ── background — Canvas ─────────────────────────────────────────
+        // ──  background  — Canvas ─────────────────────────────────────────
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,7 +98,7 @@ fun AnimatedMoon() {
             val cx = size.width / 2f
             val cy = size.height / 2f
 
-            // ── circle  ─────────────────────────────
+            // ── circle ─────────────────────────────
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(
@@ -149,22 +148,22 @@ fun AnimatedMoon() {
                 drawPath(path, color = Color.White.copy(alpha = 0.2f), style = Stroke(1f))
             }
 
-            // ── stars  ────────────────────────────────────────────────────
+            // ── نجوم ────────────────────────────────────────────────────
             data class Star(val x: Float, val y: Float, val r: Float, val color: Color)
 
             val stars = listOf(
-                Star(cx - 75f, cy - 45f, 6f, StarGold),
-                Star(cx + 80f, cy - 50f, 5f, StarWhite),
-                Star(cx - 100f, cy + 35f, 4f, StarGold),
-                Star(cx + 105f, cy + 30f, 5f, StarWhite),
+                Star(cx - 75f, cy - 45f, 6f, GoldLight),
+                Star(cx + 80f, cy - 50f, 5f, Natural_White),
+                Star(cx - 100f, cy + 35f, 4f, GoldLight),
+                Star(cx + 105f, cy + 30f, 5f, Natural_White),
                 Star(cx - 40f, cy - 55f, 3f, GoldPrimary),
-                Star(cx + 45f, cy + 45f, 4f, StarGold),
-                Star(cx + 30f, cy - 50f, 3f, StarWhite),
-                Star(cx - 120f, cy - 10f, 3f, GoldPrimary),
+                Star(cx + 45f, cy + 45f, 4f, GoldLight),
+                Star(cx + 30f, cy - 50f, 3f, Natural_White),
+                Star(cx - 120f, cy - 10f, 3f, BadgeBg),
             )
 
             stars.forEach { star ->
-                // starlines at 0°, 90°, 45°, and 135° to create a sparkling effect
+                // نجمة 4 أذرع
                 for (angle in listOf(0f, 90f, 45f, 135f)) {
                     val rad = Math.toRadians(angle.toDouble())
                     drawLine(
@@ -180,7 +179,7 @@ fun AnimatedMoon() {
                         strokeWidth = 1.5f
                     )
                 }
-                // star core
+
                 drawCircle(
                     color = star.color,
                     radius = 2f,
@@ -189,7 +188,8 @@ fun AnimatedMoon() {
             }
         }
 
-        // ── light  Canvas ──────────────────────────────────
+        // ── Light Canvas ──────────────────────────────────
+
 
         Box(
             modifier = Modifier
@@ -214,7 +214,6 @@ fun AnimatedMoon() {
                 .clip(CircleShape)
                 .background(BorderGold.copy(alpha = glow3))
         )
-
         Box(
             modifier = Modifier
                 .size(6.dp)
@@ -239,6 +238,7 @@ fun AnimatedMoon() {
                 .background(DecorationPink.copy(alpha = glow1))
         )
 
+        // ──  ───────────────────────────────────────────
         Text(
             text = "🌙",
             fontSize = 58.sp,

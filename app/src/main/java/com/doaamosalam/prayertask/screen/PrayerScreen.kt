@@ -1,10 +1,19 @@
 package com.doaamosalam.prayertask.ui.screen
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,7 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +57,39 @@ import com.doaamosalam.prayertask.viewModel.PrayerViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
+import com.doaamosalam.prayertask.R
+import com.doaamosalam.prayertask.screen.AnimatedMoon
+import com.doaamosalam.prayertask.ui.theme.DecorationBlue
+import com.doaamosalam.prayertask.ui.theme.DecorationGreen
+import com.doaamosalam.prayertask.ui.theme.DecorationOrange
+import com.doaamosalam.prayertask.ui.theme.DecorationPink
+import com.doaamosalam.prayertask.ui.theme.Natural_White
+import kotlin.math.cos
+import kotlin.math.sin
 
 // ── Entry Point ───────────────────────────────────────────────────────────────
 @Composable
@@ -205,7 +248,7 @@ private fun NextPrayerCard(nextPrayer: NextPrayer, isArabic: Boolean) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = if (isArabic) "الصلاة القادمة" else "Next Prayer",
+                text = if (isArabic) stringResource(R.string.next_prayer) else stringResource(R.string.prayer_times_en),
                 color = GoldLight.copy(alpha = 0.7f),
                 fontSize = 12.sp,
                 letterSpacing = 1.sp
@@ -263,7 +306,7 @@ fun PrayerRow(prayer: PrayerItem, isNext: Boolean, isArabic: Boolean) {
                             .padding(horizontal = 7.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = if (isArabic) "التالية" else "Next",
+                            text = if (isArabic) stringResource(R.string.next) else "Next",
                             color = BgDark,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold

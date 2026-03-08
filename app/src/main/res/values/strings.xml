@@ -10,4 +10,5 @@
     <string name="prayer_times_en">PRAYER TIMES</string>
     <string name="prayer_channel">prayer_channel</string>
     <string name="prayer_notifications">Prayer Notifications</string>
+    <string name="hh">الصلاة القادمة</string>
 </resources>
