@@ -1,4 +1,4 @@
-package com.doaamosalam.domain.model.PrayerTime
+package com.doaamosalam.domain.model.prayerTime
 
 //data class PrayerTimeResponse(
 ////    val city: String,

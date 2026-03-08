@@ -1,6 +1,7 @@
 package com.doaamosalam.prayertask.di
 
 import com.doaamosalam.domain.repo.PrayerTimeRepo
+import com.doaamosalam.domain.useCase.GetNextPrayerUseCase
 import com.doaamosalam.domain.useCase.GetPrayerTimesUseCase
 import dagger.Module
 import dagger.Provides
@@ -16,5 +17,11 @@ object PrayerUseCase {
     @Singleton
     fun providePrayerTimeUseCase(prayerTimeRepo: PrayerTimeRepo): GetPrayerTimesUseCase {
         return GetPrayerTimesUseCase(prayerTimeRepo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetNextPrayerUseCase(): GetNextPrayerUseCase {
+        return GetNextPrayerUseCase()
     }
 }

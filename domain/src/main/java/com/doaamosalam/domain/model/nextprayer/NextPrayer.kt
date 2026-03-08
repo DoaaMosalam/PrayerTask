@@ -1,4 +1,4 @@
-package com.doaamosalam.domain.model
+package com.doaamosalam.domain.model.nextprayer
 
 data class NextPrayer(
     val name: String,

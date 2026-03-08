@@ -1,7 +1,7 @@
 package com.doaamosalam.domain.useCase
 
 
-import com.doaamosalam.domain.model.PrayerTime.PrayerTimes
+import com.doaamosalam.domain.model.prayerTime.PrayerTimes
 import com.doaamosalam.domain.repo.PrayerTimeRepo
 import com.doaamosalam.domain.util.Resource
 import javax.inject.Inject

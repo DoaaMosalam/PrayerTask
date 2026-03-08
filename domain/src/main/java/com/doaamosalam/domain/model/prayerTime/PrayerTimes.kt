@@ -1,4 +1,4 @@
-package com.doaamosalam.domain.model.PrayerTime
+package com.doaamosalam.domain.model.prayerTime
 
 /*
 *     "timings": {

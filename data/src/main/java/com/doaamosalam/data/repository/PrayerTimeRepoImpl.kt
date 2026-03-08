@@ -1,7 +1,7 @@
 package com.doaamosalam.data.repository
 
 import com.doaamosalam.data.remote.APIPrayerService
-import com.doaamosalam.domain.model.PrayerTime.PrayerTimes
+import com.doaamosalam.domain.model.prayerTime.PrayerTimes
 import com.doaamosalam.domain.repo.PrayerTimeRepo
 import com.doaamosalam.domain.util.Resource
 

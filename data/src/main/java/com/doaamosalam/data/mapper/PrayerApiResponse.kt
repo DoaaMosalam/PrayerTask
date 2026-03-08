@@ -1,6 +1,6 @@
 package com.doaamosalam.data.mapper
 import com.doaamosalam.data.dto.PrayerApiResponse
-import com.doaamosalam.domain.model.PrayerTime.PrayerTimes
+import com.doaamosalam.domain.model.prayerTime.PrayerTimes
 
 
 
